@@ -3,12 +3,14 @@ import numpy as np
 
 frameWidth = 640
 frameHeight = 480
-cap = cv2.VideoCapture("LineVid.mp4")
+cap = cv2.VideoCapture("Test_Vid.mp4")
 cap.set(3, frameWidth)
 cap.set(4, frameHeight)
 
+
 def empty(a):
     pass
+
 
 # Function to update the color picker values
 def update_color_picker():
@@ -21,6 +23,7 @@ def update_color_picker():
     lower = np.array([b_min, g_min, r_min])
     upper = np.array([b_max, g_max, r_max])
     return lower, upper
+
 
 # Create the trackbars
 cv2.namedWindow("RGB")

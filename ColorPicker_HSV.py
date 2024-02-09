@@ -3,7 +3,7 @@ import numpy as np
 
 frameWidth = 640
 frameHeight = 480
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("map.mov")
 cap.set(3, frameWidth)
 cap.set(4, frameHeight)
 
@@ -21,7 +21,7 @@ cv2.createTrackbar("SAT Max", "HSV", 255, 255, empty)
 cv2.createTrackbar("VALUE Min", "HSV", 0, 255, empty)
 cv2.createTrackbar("VALUE Max", "HSV", 255, 255, empty)
 
-cap = cv2.VideoCapture("LineVid.mp4")
+# cap = cv2.VideoCapture("LineVid.mp4")
 frameCounter = 0
 
 while True:

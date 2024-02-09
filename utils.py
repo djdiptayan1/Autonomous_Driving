@@ -5,8 +5,11 @@ import numpy as np
 
 def thresholding(image):
     # red
-    lower_white_hsv = np.array([100, 65, 35])
-    upper_white_hsv = np.array([179, 188, 255])
+    # lower_white_hsv = np.array([100, 65, 35])
+    # upper_white_hsv = np.array([179, 188, 255])
+
+    lower_white_hsv = np.array([0, 24, 144])
+    upper_white_hsv = np.array([112, 99, 216])
 
     lower_white_hsl = np.array([114, 39, 38])
     upper_white_hsl = np.array([179, 255, 118])
@@ -17,15 +20,15 @@ def thresholding(image):
     lower_white_lab = np.array([0, 140, 49])
     upper_white_lab = np.array([112, 255, 255])
 
-    # hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
     # white
-    # lower_white = np.array([0, 0, 200])
-    # upper_white = np.array([180, 30, 255])
+    lower_white = np.array([0, 24, 144])
+    upper_white = np.array([112, 99, 216])
 
-    # maskWhite = cv2.inRange(hsv, lower_white_hsv, upper_white_hsv)
+    maskWhite = cv2.inRange(hsv, lower_white_hsv, upper_white_hsv)
 
-    # return maskWhite
+    return maskWhite
 
     rgb = image
     hls = cv2.cvtColor(image, cv2.COLOR_BGR2HLS)
@@ -45,6 +48,10 @@ def thresholding(image):
     lower_lab = np.array(lower_white_lab, dtype=np.uint8)
     upper_lab = np.array(upper_white_lab, dtype=np.uint8)
 
+    # Define your custom adaptive mask
+    # lower_adaptive = np.array(lower_white_adaptive, dtype=np.uint8)
+    # upper_adaptive = np.array(upper_white_adaptive, dtype=np.uint8)
+
     # Apply the filters
     mask_rgb = cv2.inRange(rgb, lower_rgb, upper_rgb)
     mask_hls = cv2.inRange(hls, lower_hls, upper_hls)
@@ -63,8 +70,10 @@ def thresholding(image):
 
 
 def warpImg(img, points, w, h, inv=False):
-    pts1 = np.float32(points)
-    pts2 = np.float32([[0, 0], [w, 0], [0, h], [w, h]])
+    # pts1 = np.float32(points)
+    # pts2 = np.float32([[0, 0], [w, 0], [0, h], [w, h]])
+    pts1 = np.float32([[114, 151], [605, 89], [72, 420], [637, 420]])
+    pts2 = np.float32([[0, 0], [420, 0], [0, 637], [420, 637]])
     if inv:
         matrix = cv2.getPerspectiveTransform(pts2, pts1)
     else:
@@ -72,6 +81,23 @@ def warpImg(img, points, w, h, inv=False):
 
     imgWarp = cv2.warpPerspective(img, matrix, (w, h))
     return imgWarp
+
+
+def warpImg1(img):
+    cv2.circle(img, (114, 151), 5, (0, 0, 255), -1)
+    cv2.circle(img, (605, 89), 5, (0, 0, 255), -1)
+    cv2.circle(img, (72, 420), 5, (0, 0, 255), -1)
+    cv2.circle(img, (637, 420), 5, (0, 0, 255), -1)
+    # selecting all the above four points in an array
+    imgPts = np.float32([[114, 151], [605, 89], [72, 420], [637, 420]])
+
+    # selecting four points in an array for the destination video( the one you want to see as your output)
+    objPoints = np.float32([[0, 0], [420, 0], [0, 637], [420, 637]])
+    # Apply perspective transformation function of openCV2. This function will return the matrix which you can feed into warpPerspective function to get the warped image.
+    matrix = cv2.getPerspectiveTransform(imgPts, objPoints)
+    result = cv2.warpPerspective(img, matrix, (400, 600))
+
+    return result
 
 
 def nothing(a):
@@ -133,6 +159,11 @@ def getHistogram(image, minPer=0.1, display=True, region=1):
         imgHist = np.zeros((image.shape[0], image.shape[1], 3), np.uint8)
 
         for x, intensity in enumerate(histValue):
+            if intensity > minVal:
+                color = (255, 0, 255)
+            else:
+                color = (0, 0, 255)
+
             cv2.line(
                 imgHist,
                 (x, image.shape[0]),

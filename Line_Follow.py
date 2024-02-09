@@ -14,7 +14,7 @@ def getLaneCurve(image, display=2):
 
     h, w, c = image.shape
     points = utils.valTrackbars()
-    imgWarp = utils.warpImg(imgThresh, points, w, h)
+    imgWarp = utils.warpImg(imgThresh, points, w, h, inv=False)
     imgWarpPoints = utils.drawPoints(image.copy(), points)
 
     # GET HISTOGRAM
@@ -114,7 +114,7 @@ def getLaneCurve(image, display=2):
 
 
 if __name__ == "__main__":
-    cap = cv2.VideoCapture("challenge_video.mp4")
+    cap = cv2.VideoCapture("Test_Vid.mp4")
 
     initialTrackVals = [214, 20, 121, 221]
     utils.initializeTrackVals(initialTrackVals)
@@ -128,7 +128,7 @@ if __name__ == "__main__":
             frameCounter = 0
 
         success, frame = cap.read()
-        frame = cv2.resize(frame, (480, 240))
+        frame = cv2.resize(frame, (854, 480))
 
         timer = cv2.getTickCount()
 
