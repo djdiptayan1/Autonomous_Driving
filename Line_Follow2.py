@@ -90,11 +90,16 @@ def getLaneCurve(img, display=2):
     if curve < -1:
         curve = -1
 
+    # Check if curve is 0 (no lane detected), return 5 in that case
+    if curve == 0:
+        return 5
+
     return curve
 
 
 if __name__ == "__main__":
     cap = cv2.VideoCapture(1)
+    # cap = cv2.resize(cap, (854, 480))
     initialTrackVals = [214, 20, 121, 221]
     utlis2.initializeTrackbars(initialTrackVals)
 
@@ -106,18 +111,18 @@ if __name__ == "__main__":
             frameCounter = 0
 
         success, frame = cap.read()
-        # frame = cv2.resize(frame, (854, 480))
+        frame = cv2.resize(frame, (854, 480))
 
         # Split the stereo frame into left and right images
         height, width, _ = frame.shape
+        # print(height, "\t", width)
         width //= 2
         left_frame = frame[:, :width, :]
         right_frame = frame[:, width:, :]
 
         timer = cv2.getTickCount()
 
-        curve = getLaneCurve(right_frame, display=2)
-        fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
-        print(f"Curve: {curve}, FPS: {fps}")
+        curve = getLaneCurve(frame, display=2)
+        print(f"Curve: {curve}")
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
