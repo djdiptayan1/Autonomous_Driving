@@ -3,19 +3,39 @@ import numpy as np
 
 
 def thresholding(img):
-    imgHsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    lowerWhite = np.array([0, 24, 144])
-    upperWhite = np.array([112, 99, 216])
-    maskWhite = cv2.inRange(imgHsv, lowerWhite, upperWhite)
-    return maskWhite
+
+    lower_white_hsv = np.array([98, 0, 166])
+    upper_white_hsv = np.array([179, 43, 255])
+
+    lower_white_hsl = np.array([114, 39, 38])
+    upper_white_hsl = np.array([179, 255, 118])
+
+    lower_white_rgb = np.array([0, 25, 22])
+    upper_white_rgb = np.array([255, 73, 255])
+
+    lower_white_lab = np.array([0, 140, 49])
+    upper_white_lab = np.array([112, 255, 255])
+
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    hls = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
+    lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+    rgb = img
+
+    mask_hsv = cv2.inRange(hsv, lower_white_hsv, upper_white_hsv)
+    mask_hls = cv2.inRange(hls, lower_white_hsl, upper_white_hsl)
+    mask_lab = cv2.inRange(lab, lower_white_lab, upper_white_lab)
+    mask_rgb = cv2.inRange(rgb, lower_white_rgb, upper_white_rgb)
+
+    # maskWhite = cv2.inRange(hsv, lower_white_hsv, upper_white_hsv)
+    return mask_hsv
 
 
 def warpImg(img, points, w, h, inv=False):
-    # pts1 = np.float32(points)
-    # pts2 = np.float32([[0, 0], [w, 0], [0, h], [w, h]])
+    pts1 = np.float32(points)
+    pts2 = np.float32([[0, 0], [w, 0], [0, h], [w, h]])
 
-    pts1 = np.float32([[114, 151], [605, 89], [72, 420], [637, 420]])
-    pts2 = np.float32([[0, 0], [420, 0], [0, 637], [420, 637]])
+    # pts1 = np.float32([[114, 151], [605, 89], [72, 420], [637, 420]])
+    # pts2 = np.float32([[0, 0], [420, 0], [0, 637], [420, 637]])
 
     if inv:
         matrix = cv2.getPerspectiveTransform(pts2, pts1)
